@@ -107,7 +107,7 @@ def setPath():
         pherf_conf_path = os.path.join(current_dir, "..", "phoenix-pherf", "config")
 
     global phoenix_jar_path
-    phoenix_jar_path = os.path.join(current_dir, "..", "phoenix-assembly", "target","*")
+    phoenix_jar_path = os.path.join(current_dir, "..", "phoenix-client", "target","*")
 
     global phoenix_client_jar
     phoenix_client_jar = find("phoenix-*-client.jar", phoenix_jar_path)
@@ -137,13 +137,13 @@ def setPath():
         hadoop_classpath = os.getenv('HADOOP_CLASSPATH', '')
 
     global hadoop_common_jar_path
-    hadoop_common_jar_path = os.path.join(current_dir, "..", "phoenix-assembly", "target","*")
+    hadoop_common_jar_path = os.path.join(current_dir, "..", "phoenix-client", "target","*")
 
     global hadoop_common_jar
     hadoop_common_jar = find("hadoop-common*.jar", hadoop_common_jar_path)
 
     global hadoop_hdfs_jar_path
-    hadoop_hdfs_jar_path = os.path.join(current_dir, "..", "phoenix-assembly", "target","*")
+    hadoop_hdfs_jar_path = os.path.join(current_dir, "..", "phoenix-client", "target","*")
 
     global hadoop_hdfs_jar
     hadoop_hdfs_jar = find("hadoop-hdfs*.jar", hadoop_hdfs_jar_path)

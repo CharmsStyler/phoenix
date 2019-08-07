@@ -30,6 +30,8 @@
     <module>phoenix-server</module>
     <module>phoenix-pherf</module>
     <module>phoenix-spark</module>
+<module>phoenix-client</module>
+    
     <module>phoenix-assembly</module>
     <module>phoenix-tracing-webapp</module>
   </modules>
@@ -339,6 +341,11 @@
             </execution>
           </executions>
         </plugin>
+      <plugin>
+          <groupId>org.apache.maven.plugins</groupId>
+          <artifactId>maven-shade-plugin</artifactId>
+          <version>2.4.3</version>
+        </plugin>
       </plugins>
     </pluginManagement>
 
@@ -502,6 +509,10 @@
           <exclusion>
             <groupId>org.jruby</groupId>
             <artifactId>jruby-complete</artifactId>
+          </exclusion>
+        <exclusion>
+            <groupId>org.apache.hadoop</groupId>
+            <artifactId>hadoop-hdfs</artifactId>
           </exclusion>
         </exclusions>
       </dependency>

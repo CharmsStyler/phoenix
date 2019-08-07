@@ -10,6 +10,8 @@
   <name>Phoenix Query Server</name>
   <description>A query server for exposing Phoenix to thin clients</description>
 
+  <packaging>jar</packaging>
+  
   <licenses>
     <license>
       <name>The Apache Software License, Version 2.0</name>
@@ -25,34 +27,113 @@
   </organization>
 
   <properties>
-    <top.dir>${project.basedir}/..</top.dir>
+    <!-- Don't make a test-jar -->
+    <maven.test.skip>true</maven.test.skip>
+    <!-- Don't make a source-jar -->
+    <source.skip>true</source.skip>
+    <license.bundles.dependencies>true</license.bundles.dependencies><top.dir>${project.basedir}/..</top.dir>
   </properties>
 
   <build>
     <plugins>
       <plugin>
-        <groupId>org.codehaus.mojo</groupId>
-        <artifactId>build-helper-maven-plugin</artifactId>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-site-plugin</artifactId>
+        <configuration>
+          <skip>true</skip>
+        </configuration>
+      </plugin>
+      <plugin>
+        <!--Make it so assembly:single does nothing in here-->
+        <artifactId>maven-assembly-plugin</artifactId>
+        <configuration>
+          <skipAssembly>true</skipAssembly>
+        </configuration>
       </plugin>
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-failsafe-plugin</artifactId>
-      </plugin>
-      <plugin>
-        <artifactId>maven-assembly-plugin</artifactId>
+        <artifactId>maven-jar-plugin</artifactId>
         <executions>
           <execution>
-            <id>runnable</id>
+            <id>default-jar</id>
+            <phase>none</phase>
+          </execution>
+        </executions>
+      </plugin>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-install-plugin</artifactId>
+        <executions>
+          <execution>
+            <goals>
+              <goal>install-file</goal>
+            </goals>
+            <id>default-install</id>
+            <configuration>
+              <skip>true</skip>
+            </configuration>
+            <phase>install</phase>
+          </execution>
+        </executions>
+        <configuration>
+          <file>${basedir}/target/phoenix-${project.version}-server.jar</file>
+        </configuration>
+      </plugin>
+
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-shade-plugin</artifactId>
+        <executions>
+          <execution>
             <phase>package</phase>
             <goals>
-              <goal>single</goal>
+              <goal>shade</goal>
             </goals>
             <configuration>
-              <attach>false</attach>
-              <finalName>${project.artifactId}-${project.version}</finalName>
-              <descriptors>
-                <descriptor>src/build/query-server-runnable.xml</descriptor>
-              </descriptors>
+              <finalName>phoenix-${project.version}-server</finalName>
+                <shadedArtifactAttached>false</shadedArtifactAttached>
+                <promoteTransitiveDependencies>true</promoteTransitiveDependencies>
+                <shadeTestJar>false</shadeTestJar>
+                <transformers>
+                    <!--<transformer implementation="org.apache.maven.plugins.shade.resource.ApacheLicenseResourceTransformer">-->
+                    <!--</transformer>-->
+                    <transformer implementation="org.apache.maven.plugins.shade.resource.DontIncludeResourceTransformer">
+                        <resources>
+                            <resource>LICENSE.txt</resource>
+                            <resource>ASL2.0</resource>
+                        </resources>
+                    </transformer>
+                    <transformer
+                            implementation="org.apache.maven.plugins.shade.resource.ApacheNoticeResourceTransformer">
+                        <addHeader>false</addHeader>
+                    </transformer>
+                    <transformer implementation="org.apache.maven.plugins.shade.resource.ServicesResourceTransformer"/>
+                    <transformer
+                            implementation="org.apache.maven.plugins.shade.resource.IncludeResourceTransformer">
+                        <resource>LICENSE.txt</resource>
+                        <file>${project.basedir}/../LICENSE.txt</file>
+                    </transformer>
+                </transformers>
+                <artifactSet>
+                <includes>
+                  <include>org.apache.phoenix:phoenix-core</include>
+                  <include>org.iq80.snappy:snappy</include>
+                  <include>org.antlr:antlr*</include>
+                  <include>org.apache.tephra:tephra*</include>
+                  <include>com.google.code.gson:gson</include>
+                  <include>org.jruby.joni:joni</include>
+                  <include>org.jruby.jcodings:jcodings</include>
+                  <include>joda-time:joda-time</include>
+                  <include>org.apache.twill:twill*</include>
+                  <include>com.google.inject.extensions:guice-assistedinject</include>
+                  <include>it.unimi.dsi:fastutil</include>
+                  <include>io.dropwizard.metrics:metrics-core</include>
+                  <include>org.apache.thrift:libthrift</include>
+                </includes>
+                  <excludes>
+                    <exclude>org.apache.phoenix:phoenix-server</exclude>
+                  </excludes>
+              </artifactSet>
             </configuration>
           </execution>
         </executions>

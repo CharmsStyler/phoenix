@@ -26,25 +26,79 @@
 
   <properties>
     <top.dir>${project.basedir}/..</top.dir>
+  <shaded.package>org.apache.phoenix.shaded</shaded.package>
   </properties>
 
   <build>
     <plugins>
       <plugin>
         <artifactId>maven-assembly-plugin</artifactId>
+        <configuration>
+          <skipAssembly>true</skipAssembly>
+        </configuration>
+      </plugin>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-shade-plugin</artifactId>
         <executions>
           <execution>
             <id>thin-client</id>
             <phase>package</phase>
             <goals>
-              <goal>single</goal>
+              <goal>shade</goal>
             </goals>
             <configuration>
-              <attach>false</attach>
-              <finalName>phoenix-${project.version}</finalName>
-              <descriptors>
-                <descriptor>src/build/thin-client.xml</descriptor>
-              </descriptors>
+              <finalName>phoenix-${project.version}-thin-client</finalName>
+              <relocations>
+
+                <!-- COM relocation -->
+
+                <relocation>
+                  <pattern>com.fasterxml</pattern>
+                  <shadedPattern>${shaded.package}.com.fasterxml</shadedPattern>
+                </relocation>
+                <!-- ORG relocation -->
+                <relocation>
+                  <pattern>org.apache.calcite</pattern>
+                  <shadedPattern>${shaded.package}.org.apache.calcite</shadedPattern>
+                </relocation>
+                <relocation>
+                  <pattern>org.apache.commons</pattern>
+                  <shadedPattern>${shaded.package}.org.apache.commons</shadedPattern>
+                  <excludes>
+                    <exclude>org.apache.commons.logging.**</exclude>
+                  </excludes>
+                </relocation>
+                <relocation>
+                  <pattern>org.apache.http</pattern>
+                  <shadedPattern>${shaded.package}.org.apache.http</shadedPattern>
+                </relocation>
+
+            <relocation>
+                  <pattern>org.fusesource</pattern>
+                  <shadedPattern>${shaded.package}.org.fusesource</shadedPattern>
+                </relocation>
+                <relocation>
+                  <pattern>org.hamcrest</pattern>
+                  <shadedPattern>${shaded.package}.org.hamcrest</shadedPattern>
+                </relocation>
+                <relocation>
+                  <pattern>org.junit</pattern>
+                  <shadedPattern>${shaded.package}.org.junit</shadedPattern>
+                </relocation>
+
+                <!-- MISC relocations -->
+
+                <relocation>
+                  <pattern>jline</pattern>
+                  <shadedPattern>${shaded.package}.jline</shadedPattern>
+                </relocation>
+                <relocation>
+                  <pattern>junit</pattern>
+                  <shadedPattern>${shaded.package}.junit</shadedPattern>
+                </relocation>
+
+              </relocations>
             </configuration>
           </execution>
         </executions>
