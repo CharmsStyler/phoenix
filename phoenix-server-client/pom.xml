@@ -48,6 +48,11 @@
               <goal>shade</goal>
             </goals>
             <configuration>
+               <artifactSet>
+                <excludes>
+                  <exclude>com.google.protobuf</exclude>                  
+                </excludes>
+              </artifactSet>
               <finalName>phoenix-${project.version}-thin-client</finalName>
               <relocations>
 
@@ -72,6 +77,11 @@
                 <relocation>
                   <pattern>org.apache.http</pattern>
                   <shadedPattern>${shaded.package}.org.apache.http</shadedPattern>
+                </relocation>
+
+                 <relocation>
+                  <pattern>sqlline</pattern>
+                  <shadedPattern>${shaded.package}.sqlline</shadedPattern>
                 </relocation>
 
             <relocation>
