@@ -27,7 +27,7 @@
   <parent>
     <groupId>org.apache.phoenix</groupId>
     <artifactId>phoenix</artifactId>
-    <version>5.0.0-HBase-2.0</version>
+    <version>5.0.0-HBase-2.0-InforNexus28-9-2020</version>
   </parent>
   <artifactId>phoenix-queryserver-client</artifactId>
   <name>Phoenix Query Server Client</name>
@@ -72,6 +72,11 @@
               <goal>shade</goal>
             </goals>
             <configuration>
+              <artifactSet>
+                <excludes>
+                  <exclude>com.google.protobuf</exclude>                  
+                </excludes>
+              </artifactSet>
               <finalName>phoenix-${project.version}-thin-client</finalName>
 
               <transformers>
@@ -118,10 +123,6 @@
                   <pattern>com.google.collect</pattern>
                   <shadedPattern>${shaded.package}.com.google.collect</shadedPattern>
                 </relocation>
-                <relocation>
-                  <pattern>com.google.protobuf</pattern>
-                  <shadedPattern>${shaded.package}.com.google.protobuf</shadedPattern>
-                </relocation>
                 <!-- ORG relocation -->
                 <relocation>
                   <pattern>org.apache.calcite.avatica</pattern>
@@ -143,7 +144,10 @@
                   <pattern>org.apache.http</pattern>
                   <shadedPattern>${shaded.package}.org.apache.http</shadedPattern>
                 </relocation>
-
+                <relocation>
+                  <pattern>sqlline</pattern>
+                  <shadedPattern>${shaded.package}.sqlline</shadedPattern>
+                </relocation>
                 <relocation>
                   <pattern>org.fusesource</pattern>
                   <shadedPattern>${shaded.package}.org.fusesource</shadedPattern>
