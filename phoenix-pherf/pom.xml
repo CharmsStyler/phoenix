@@ -15,7 +15,7 @@
 	<parent>
 		<groupId>org.apache.phoenix</groupId>
 		<artifactId>phoenix</artifactId>
-		<version>4.7.0-HBase-1.1-InforNexus8-8-2019</version>
+		<version>v4.7.0-HBase-1.1-shaded-thin-client-InforNexus10-20-2020</version>
 	</parent>
 
 	<artifactId>phoenix-pherf</artifactId>

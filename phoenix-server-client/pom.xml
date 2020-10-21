@@ -4,7 +4,7 @@
   <parent>
     <groupId>org.apache.phoenix</groupId>
     <artifactId>phoenix</artifactId>
-    <version>4.7.0-HBase-1.1-InforNexus8-8-2019</version>
+    <version>v4.7.0-HBase-1.1-shaded-thin-client-InforNexus10-20-2020</version>
   </parent>
   <artifactId>phoenix-server-client</artifactId>
   <name>Phoenix Query Server Client</name>
@@ -48,9 +48,22 @@
               <goal>shade</goal>
             </goals>
             <configuration>
+              <filters>
+                <filter>
+                   <artifact>*:*</artifact>
+                   <excludes>
+                    <exclude>com.google.protobuf*</exclude>                  
+                  <exclude>google.protobuf*</exclude>
+                  <exclude>google/protobuf/**</exclude>
+                   </excludes>
+                </filter>
+             </filters>
+             
                <artifactSet>
                 <excludes>
-                  <exclude>com.google.protobuf</exclude>                  
+                  <exclude>com.google.protobuf*</exclude>                  
+                  <exclude>google.protobuf*</exclude>
+                  <exclude>google/protobuf/**</exclude>
                 </excludes>
               </artifactSet>
               <finalName>phoenix-${project.version}-thin-client</finalName>
@@ -63,10 +76,10 @@
                   <shadedPattern>${shaded.package}.com.fasterxml</shadedPattern>
                 </relocation>
                 <!-- ORG relocation -->
-                <relocation>
+                <!-- <relocation>
                   <pattern>org.apache.calcite</pattern>
                   <shadedPattern>${shaded.package}.org.apache.calcite</shadedPattern>
-                </relocation>
+                </relocation> -->
                 <relocation>
                   <pattern>org.apache.commons</pattern>
                   <shadedPattern>${shaded.package}.org.apache.commons</shadedPattern>
@@ -117,14 +130,22 @@
   </build>
 
   <dependencies>
+         
     <dependency>
       <groupId>org.apache.calcite</groupId>
       <artifactId>calcite-avatica</artifactId>
+      <exclusions>
+        <exclusion>
+          <groupId>com.google.protobuf</groupId>
+          <artifactId>protobuf-java</artifactId>
+        </exclusion>
+      </exclusions>
     </dependency>
-    <dependency>
-      <!-- a dependency for the thin-client uberjar -->
+ 
+    <dependency>     
       <groupId>sqlline</groupId>
       <artifactId>sqlline</artifactId>
     </dependency>
+ 
   </dependencies>
 </project>
