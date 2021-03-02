@@ -132,8 +132,8 @@
   <dependencies>
          
     <dependency>
-      <groupId>org.apache.calcite</groupId>
-      <artifactId>calcite-avatica</artifactId>
+        <groupId>org.apache.calcite.avatica</groupId>
+        <artifactId>avatica</artifactId>      
       <exclusions>
         <exclusion>
           <groupId>com.google.protobuf</groupId>
